@@ -27,9 +27,10 @@ function getRandomWord() {
 
 //функция которая разбивает контент рандомного слова на буквы,оборачивает в span и обратно собирает массив в строку
 function renderWord(listWord) {
+    wordIndex = 0;
     word.innerHTML = listWord
         .split('')
-        .map((letter) => `<span>${letter}<span>`)
+        .map((letter) => `<span>${letter}</span>`)
         .join('');
 
 }
@@ -53,19 +54,18 @@ function symbolCorrect() {
 function symbolWrong() {
     //ошибочному символу присваиваем класс "w" (children - это теги-потомки HTML-элемента - наши буквы, обернутые в span)
     word.children[wordIndex].className = 'w';
-    numberWordsWrong.textContent = ++numberWordsWrong;
-    numberMistakesWord.textContent = ++numberMistakesWord;
+    numberMistakesWord.textContent = ++numberMistakesWord.textContent;
 }
 
 
 //функция подытоживагия результатов игры
 function checkWordsCount() {
     if (numberWordsCorrect.textContent >= 5) {
-        alert(`Победа! Ваше время составило:`)
+        alert(`Победа! Ваше время составило: ${timer.textContent}`)
     }
 
     if (numberWordsWrong.textContent >= 5) {
-        alert(`Вы проиграли. Попробуйте вновь=) Ваше время составило:`)
+        alert(`Вы проиграли. Попробуйте вновь=) Ваше время составило: ${timer.textContent}`)
     }
 }
 
@@ -106,14 +106,19 @@ function clearTimer() {
 //функция подготовки к новому слову
 function nextWord() {
     checkWordsCount();
+
+    if (numberMistakesWord.textContent > 0) {
+        numberWordsWrong.textContent = ++numberWordsWrong.textContent;
+    }
+
     currentWord = getRandomWord();
     renderWord(currentWord);
     wordIndex = 0;
     numberMistakesWord.textContent = 0;
 
+
+
 }
-
-
 
 
 document.addEventListener('keyup', (event) => {
@@ -126,12 +131,13 @@ document.addEventListener('keyup', (event) => {
     }
 
     if (wordIndex === currentWord.length) {
-        numberWordsCorrect.textContent = ++numberWordsCorrect;
+        numberWordsCorrect.textContent = ++numberWordsCorrect.textContent;
         setTimeout(nextWord, 0);
     }
 })
 
 
-
+// рандомное слово
 currentWord = getRandomWord();
+// дроблю рандомное слово на буквы
 renderWord(currentWord);
